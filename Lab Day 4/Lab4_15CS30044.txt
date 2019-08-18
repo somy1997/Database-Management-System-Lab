@@ -1,0 +1,143 @@
+/*
+Roll No:	15CS30044
+Name:		Nishant Baranwal Somy
+PC Number:	25
+*/
+
+1.
+
+SELECT name "Friends of Sachin"
+FROM Student,Friend
+WHERE OwnRoll = RollNo 
+AND FriendRoll =
+(
+SELECT RollNo
+FROM Student
+WHERE name = 'Sachin'
+)
+UNION ALL
+SELECT name "Friends of Sachin"
+FROM Student,Friend
+WHERE FriendRoll = RollNo 
+AND OwnRoll =
+(
+SELECT RollNo
+FROM Student
+WHERE name = 'Sachin'
+)
+;
+
+2.
+
+SELECT title
+FROM Movie
+WHERE mID NOT IN
+(
+SELECT DISTINCT mID
+FROM Rating
+)
+;
+
+4.
+
+SELECT s1.name "Student 1",s1.class "Class",s2.name "Student 2",s2.class "Class"
+FROM Student s1,Student s2, Rating r1, Rating r2
+WHERE s1.RollNo < s2.RollNo
+AND r1.RollNo = s1.RollNo
+AND r2.RollNo = s2.RollNo
+AND r1.mID = r2.mID
+AND r1.stars = r2.stars
+;
+
+5.
+
+CREATE VIEW fr(frcount)
+AS 
+(
+SELECT COUNT(*)
+FROM Student, Friend
+WHERE RollNo = OwnRoll OR RollNo = FriendRoll
+GROUP BY RollNo
+)
+;
+
+SELECT AVG(frcount) 
+FROM fr
+;
+
+6.
+
+SELECT COUNT(RollNo) - COUNT(DISTINCT name)
+FROM Student;
+
+7.
+
+CREATE VIEW likeseachother(Roll1,Roll2)
+AS
+SELECT L1.OwnRoll, L1.FriendRoll
+FROM Likes L1, Student s1, Likes L2, Student s2
+WHERE L1.OwnRoll=L2.FriendRoll
+AND L2.OwnRoll = L1.FriendRoll
+AND L1.OwnRoll < L1.FriendRoll
+AND L1.OwnRoll = s1.RollNo
+AND L2.OwnRoll = s2.RollNo
+AND s1.class = s2.class
+;
+
+SELECT title,director
+FROM Movie m,likeseachother l,Rating r1,Rating r2
+WHERE m.mID = r1.mID
+AND   m.mID = r2.mID
+AND r1.RollNo = l.Roll1
+AND r2.RollNo = l.Roll2
+AND r1.stars > 2
+AND r2.stars > 2
+;
+
+8.
+
+SELECT s1.name, s1.class, s2.name, s2.class
+FROM Likes L, Student s1, Student s2
+WHERE L.OwnRoll = s1.RollNo
+AND L.FriendRoll = s2.RollNo
+AND s1.class - s2.class >= 2
+;
+
+9.
+
+SELECT DISTINCT RollNo,name
+FROM Student s, Friend f
+WHERE
+(
+s.RollNo = f.OwnRoll
+AND
+f.FriendRoll NOT IN
+(
+SELECT OwnRoll
+FROM Likes
+WHERE FriendRoll=s.RollNo
+)
+)
+OR
+(
+s.RollNo = f.FriendRoll
+AND
+f.OwnRoll NOT IN
+(
+SELECT OwnRoll
+FROM Likes
+WHERE FriendRoll=s.RollNo
+)
+)
+;
+
+10.
+
+SELECT DISTINCT s1.name,s2.name
+FROM Student s1,Student s2,Rating r1,Rating r2
+WHERE s1.RollNo = r1.RollNo
+AND s2.RollNo = r2.RollNo
+AND r1.mID = r2.mID
+AND s1.RollNo != s2.RollNo
+AND s1.name <= s2.name
+;

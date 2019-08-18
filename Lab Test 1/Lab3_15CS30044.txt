@@ -1,0 +1,268 @@
+/*
+Roll No:	15CS30044
+Name:		Nishant Baranwal Somy
+PC Number:	25
+*/
+
+CREATE TABLE patient
+(
+patient_id CHAR(6) PRIMARY KEY, 
+name VARCHAR(50) NOT NULL, 
+house_no INTEGER,
+street_name VARCHAR(30),
+pin_code CHAR(6),
+state VARCHAR(30) NOT NULL,
+gender CHAR(1),
+date_of_birth DATE,
+age INTEGER
+);
+
+CREATE TABLE phone_directory
+(
+patient_id CHAR(6) NOT NULL REFERENCES patient,
+phone_number CHAR(11) NOT NULL,
+PRIMARY KEY(patient_id,phone_number)
+);
+
+CREATE TABLE department
+(
+department_code CHAR(3) PRIMARY KEY, 
+department_name VARCHAR(30) NOT NULL, 
+name_of_the_HOD VARCHAR(50),
+number_of_wards INTEGER NOT NULL
+);
+
+CREATE TABLE doctor
+(
+doctor_id CHAR(6) PRIMARY KEY, 
+name VARCHAR(50) NOT NULL, 
+date_of_birth DATE,
+department_code CHAR(3) NOT NULL REFERENCES department, 
+highest_degree VARCHAR(10)
+);
+
+CREATE TABLE appointments
+(
+patient_id CHAR(6) NOT NULL REFERENCES patient, 
+doctor_id CHAR(6) NOT NULL REFERENCES doctor, 
+PRIMARY KEY(patient_id,doctor_id)
+);
+
+CREATE TABLE admissions
+(
+patient_id CHAR(6) NOT NULL REFERENCES patent, 
+department_code CHAR(3) NOT NULL REFERENCES department,
+date_of_admission DATE NOT NULL,
+time_of_admission TIME NOT NULL,
+date_of_release DATE,
+time_of_release TIME,
+PRIMARY KEY(patient_id,department_code,date_of_admission,time_of_admission)
+);
+
+INSERT INTO department(department_code,department_name,number_of_wards) VALUES
+('001','Ophthalmology',4),
+('002','Cardiology',8),
+('003','Neurology',6),
+('004','Orthopedics',5),
+('005','Physiotherapy',3)
+;
+
+INSERT INTO patient(patient_id,name,state) VALUES
+('01','Ayush','Maharashtra'),
+('02','Harsha','Rajasthan'),
+('03','Parikshit','Maharashtra'),
+('04','Lalasa','Tamil Nadu'),
+('05','Siddhant','West Bengal'),
+('06','Shashi','West Bengal'),
+('07','Raj','Rajasthan'),
+('08','Siddharth','Rajasthan'),
+('09','Krushna','Rajasthan'),
+('10','Himanshu','Rajasthan'),
+('11','Ankur','Gujarat'),
+('12','Abhinav','Maharashtra'),
+('13','Prathamesh','Maharashtra'),
+('14','Yashasvi','Rajasthan'),
+('15','Yashvardhan','Rajasthan'),
+('16','Hemanth','Uttar Pradesh'),
+('17','Vaibhav','Uttar Pradesh'),
+('18','Chandan','Uttar Pradesh'),
+('19','Vineeth','Assam')
+;
+
+INSERT INTO doctor(doctor_id,name,department_code) VALUES
+('01','Prajwal','001'),
+('02','Siddharth','001'),
+('03','Nisarg','001'),
+('04','Bhanu','001'),
+('05','Atharva','002'),
+('06','Vivek','002'),
+('07','Aayush','002'),
+('08','Subham','002'),
+('09','Anubhav','003'),
+('10','Nishok','003'),
+('11','Aman','003'),
+('12','Yaswanth','003'),
+('13','Sharmilla','004'),
+('14','Theerda','004'),
+('15','Sudhanyu','005'),
+('16','Vishesh','005')
+;
+
+INSERT INTO admissions(patient_id,department_code,date_of_admission,time_of_admission,date_of_release) VALUES
+('01','001','2017-01-01','12:00','2017-02-01'),
+('01','001','2017-01-01','18:00','2017-02-01'),
+('02','001','2017-01-01','12:00','2017-02-01'),
+('02','001','2017-01-01','18:00','2017-02-01'),
+('03','001','2017-01-01','12:00',NULL),
+('04','001','2017-01-01','12:00',NULL),
+('05','001','2017-01-01','12:00',NULL),
+('01','002','2017-01-01','12:00',NULL),
+('06','002','2017-01-01','12:00','2017-02-01'),
+('07','002','2017-01-01','12:00','2017-02-01'),
+('08','002','2017-01-01','12:00',NULL),
+('09','002','2017-01-01','12:00',NULL),
+('10','002','2017-01-01','12:00',NULL),
+('10','002','2017-01-01','18:00',NULL),
+('01','003','2017-01-01','12:00','2017-02-01'),
+('10','003','2017-01-01','12:00',NULL),
+('11','003','2017-01-01','12:00','2017-02-01'),
+('14','003','2017-01-01','12:00',NULL),
+('02','003','2017-01-01','12:00','2017-02-01'),
+('02','003','2017-02-01','12:00',NULL),
+('02','003','2017-03-01','12:00',NULL),
+('02','004','2017-01-01','12:00','2017-02-01'),
+('03','004','2017-01-01','12:00','2017-02-01'),
+('03','004','2017-02-01','12:00','2017-03-01'),
+('03','004','2017-03-01','12:00',NULL),
+('04','004','2017-01-01','12:00','2017-02-01'),
+('01','005','2017-01-01','12:00','2017-02-01'),
+('06','005','2017-01-01','12:00','2017-02-01'),
+('07','005','2017-01-01','12:00','2017-02-01'),
+('08','005','2017-01-01','12:00','2017-02-01'),
+('09','005','2017-01-01','12:00','2017-02-01'),
+('11','005','2017-01-01','12:00','2017-02-01')
+;
+
+INSERT INTO appointments VALUES
+('01','01'),
+('01','02'),
+('01','04'),
+('01','07'),
+('01','15'),
+('02','15'),
+('02','03'),
+('02','05'),
+('03','05'),
+('03','06'),
+('03','08'),
+('04','08'),
+('05','09'),
+('06','10'),
+('07','11'),
+('08','12'),
+('09','13'),
+('10','16'),
+('14','16'),
+('11','14'),
+('12','13'),
+('13','14')
+;
+
+1.
+
+SELECT DISTINCT p.patient_id "Patient ID", p.name "Patient Name", d.doctor_id "Doctor ID", d.name "Doctor name"
+FROM patient p, doctor d, appointments ap, admissions ad
+WHERE p.patient_id = ap.patient_id
+AND p.patient_id = ad.patient_id
+AND d.doctor_id = ap.doctor_id
+ORDER BY d.doctor_id;
+
+2.
+
+SELECT DISTINCT p.patient_id "Patient ID", p.name "Patient Name", d.doctor_id "Doctor ID", d.name "Doctor name"
+FROM patient p, doctor d, appointments ap, admissions ad
+WHERE p.patient_id = ap.patient_id
+AND p.patient_id = ad.patient_id
+AND d.doctor_id = ap.doctor_id
+AND ad.date_of_release IS NULL
+ORDER BY d.doctor_id;
+
+3.
+
+SELECT DISTINCT p.patient_id "Patient ID", p.name "Patient Name", d.doctor_id "Doctor ID", d.name "Doctor name"
+FROM patient p, doctor d, appointments ap, admissions ad
+WHERE p.patient_id = ap.patient_id
+AND p.patient_id = ad.patient_id
+AND d.doctor_id = ap.doctor_id
+AND 
+(
+SELECT COUNT(DISTINCT ADM.patient_id,ADM.department_code)
+FROM admissions ADM
+WHERE p.patient_id = ADM.patient_id
+) > 1
+ORDER BY d.doctor_id;
+
+4.
+
+SELECT DISTINCT p.patient_id "Patient ID", p.name "Patient Name", d.doctor_id "Doctor ID", d.name "Doctor name"
+FROM patient p, doctor d, appointments ap, admissions ad
+WHERE p.patient_id = ap.patient_id
+AND p.patient_id = ad.patient_id
+AND d.doctor_id = ap.doctor_id
+AND
+d.department_code NOT IN 
+(
+SELECT DISTINCT ADM.department_code
+FROM admissions ADM
+WHERE p.patient_id = ADM.patient_id
+)
+ORDER BY d.doctor_id;
+
+5.
+
+SELECT DISTINCT p.patient_id "Patient ID", p.name "Patient Name", d.doctor_id "Doctor ID", d.name "Doctor name"
+FROM patient p, doctor d, appointments ap, admissions ad
+WHERE p.patient_id = ap.patient_id
+AND p.patient_id = ad.patient_id
+AND d.doctor_id = ap.doctor_id
+AND
+d.department_code <> SOME
+(
+SELECT DISTINCT ADM.department_code
+FROM admissions ADM
+WHERE p.patient_id = ADM.patient_id
+)
+ORDER BY d.doctor_id;
+
+6.
+
+SELECT p.patient_id "Patient ID", p.name "Patient Name", ad.date_of_admission "Date of Admission", ad.date_of_release "Date of Release"
+FROM patient p, admissions ad
+WHERE p.patient_id = ad.patient_id;
+
+7.
+
+SELECT d.doctor_id "Doctor ID", d.name "Doctor name", COUNT(DISTINCT ap.patient_id) "Number of patients currently admitted"
+FROM doctor d, appointments ap, admissions ad
+WHERE ap.patient_id = ad.patient_id
+AND d.doctor_id = ap.doctor_id
+AND ad.date_of_release IS NULL
+GROUP BY d.doctor_id;
+
+8.
+
+SELECT p.state "State", dpt.department_name "Department name", COUNT(DISTINCT p.patient_id) "Number of patients currently admitted"
+FROM patient p, admissions ad, department dpt
+WHERE p.patient_id = ad.patient_id
+AND ad.department_code = dpt.department_code
+AND ad.date_of_release IS NULL
+AND dpt.number_of_wards > 5
+AND dpt.department_code IN
+(
+SELECT ADM.department_code
+FROM admissions ADM
+WHERE ADM.date_of_release IS NULL
+GROUP BY ADM.department_code
+HAVING COUNT(DISTINCT ADM.patient_id) >2
+)
+GROUP BY p.state,dpt.department_code;

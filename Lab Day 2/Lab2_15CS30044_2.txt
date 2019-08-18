@@ -1,0 +1,33 @@
+/*
+Roll No:	15CS30044
+Name:		Nishant Baranwal Somy
+PC Number:	25
+*/
+
+/*2.(a)*/
+
+CREATE TABLE department(dept_cd CHAR(2) PRIMARY KEY, dept_name VARCHAR(30), year_of_establishment int);
+
+/*2.(b)*/
+
+INSERT INTO department VALUES ('CS','Computer Sc.',1960),('PH','Physics',1940),('ME','Mechanical Engineering',1910);
+
+/*2.(c)*/
+
+CREATE TABLE student(roll_no CHAR(6), name VARCHAR(20), dept_cd CHAR(2), address VARCHAR(50),PRIMARY KEY(roll_no));
+
+/*2.(d)*/
+
+INSERT INTO student(roll_no,dept_cd,address,name) VALUES ('A001','CS','First Home','Nishant Baranwal'),('A002','CS','Second Home','Nishant Baranwal'),('A003','PH','Third Home','Nishant Baranwal'),('A004','ME','Fourth Home','Nishant Baranwal');
+
+/*2.(e)*/
+
+SELECT * FROM department WHERE year_of_establishment <1945; 
+
+/*2.(f)*/
+
+SELECT roll_no,name,address,student.dept_cd,dept_name FROM student,department WHERE student.dept_cd = department.dept_cd;
+
+/*2.(g)*/
+
+SELECT roll_no,name,dept_name FROM student,department WHERE student.dept_cd = department.dept_cd AND year_of_establishment<1945;

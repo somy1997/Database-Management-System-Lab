@@ -1,0 +1,513 @@
+I have done all the questions with the original assumption in which the patients could be admitted to multiple doctors as well as multiple departments at the same time.
+
+Original Description as mentioned in Assignment 2:
+
+Consider a hospital having several departments (like cardiology, orthopedics, neurology, etc.). Each doctor can belong to only one department. A patient may be admitted under multiple departments and be assigned to one or more doctors. There is a date of admission and a date of release for each patient. 
+
+A patient is identified by a patient_id. For each patient, we also need to maintain information like name, address (comprised of house no., street name, pincode and state), gender, date of birth, age and one or more phone numbers. For each doctor, we need to maintain doctor_id , name, date of birth, department and highest degree. A department is identified by its department_code. Other attributes of a department are department name, name of the HoD and number of wards it has.
+
+
+Table Descriptions :
+
+
+Patient :
+
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| patient_id    | char(6)     | NO   | PRI | NULL    |       |
+| name          | varchar(50) | NO   |     | NULL    |       |
+| house_no      | int(11)     | YES  |     | NULL    |       |
+| street_name   | varchar(30) | YES  |     | NULL    |       |
+| pin_code      | char(6)     | YES  |     | NULL    |       |
+| state         | varchar(30) | NO   |     | NULL    |       |
+| gender        | char(1)     | YES  |     | NULL    |       |
+| date_of_birth | date        | YES  |     | NULL    |       |
+| age           | int(11)     | YES  |     | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+9 rows in set (0.05 sec)
+
+Phone Directory :
+
++--------------+----------+------+-----+---------+-------+
+| Field        | Type     | Null | Key | Default | Extra |
++--------------+----------+------+-----+---------+-------+
+| patient_id   | char(6)  | NO   | PRI | NULL    |       |
+| phone_number | char(11) | NO   | PRI | NULL    |       |
++--------------+----------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+Department :
+
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| department_code | char(3)     | NO   | PRI | NULL    |       |
+| department_name | varchar(30) | NO   |     | NULL    |       |
+| name_of_the_HOD | varchar(50) | YES  |     | NULL    |       |
+| number_of_wards | int(11)     | NO   |     | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+Doctor :
+
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| doctor_id       | char(6)     | NO   | PRI | NULL    |       |
+| name            | varchar(50) | NO   |     | NULL    |       |
+| date_of_birth   | date        | YES  |     | NULL    |       |
+| department_code | char(3)     | NO   |     | NULL    |       |
+| highest_degree  | varchar(10) | YES  |     | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+Appointments :
+
++------------+---------+------+-----+---------+-------+
+| Field      | Type    | Null | Key | Default | Extra |
++------------+---------+------+-----+---------+-------+
+| patient_id | char(6) | NO   | PRI | NULL    |       |
+| doctor_id  | char(6) | NO   | PRI | NULL    |       |
++------------+---------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+Admissions :
+
++-------------------+---------+------+-----+---------+-------+
+| Field             | Type    | Null | Key | Default | Extra |
++-------------------+---------+------+-----+---------+-------+
+| patient_id        | char(6) | NO   | PRI | NULL    |       |
+| department_code   | char(3) | NO   | PRI | NULL    |       |
+| date_of_admission | date    | NO   | PRI | NULL    |       |
+| time_of_admission | time    | NO   | PRI | NULL    |       |
+| date_of_release   | date    | YES  |     | NULL    |       |
+| time_of_release   | time    | YES  |     | NULL    |       |
++-------------------+---------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+
+Values Inserted in the tables :
+
+
+Department :
+
++-----------------+-----------------+-----------------+-----------------+
+| department_code | department_name | name_of_the_HOD | number_of_wards |
++-----------------+-----------------+-----------------+-----------------+
+| 001             | Ophthalmology   | NULL            |               4 |
+| 002             | Cardiology      | NULL            |               8 |
+| 003             | Neurology       | NULL            |               6 |
+| 004             | Orthopedics     | NULL            |               5 |
+| 005             | Physiotherapy   | NULL            |               3 |
++-----------------+-----------------+-----------------+-----------------+
+5 rows in set (0.00 sec)
+
+Patient :
+
++------------+-------------+----------+-------------+----------+---------------+--------+---------------+------+
+| patient_id | name        | house_no | street_name | pin_code | state         | gender | date_of_birth | age  |
++------------+-------------+----------+-------------+----------+---------------+--------+---------------+------+
+| 01         | Ayush       |     NULL | NULL        | NULL     | Maharashtra   | NULL   | NULL          | NULL |
+| 02         | Harsha      |     NULL | NULL        | NULL     | Rajasthan     | NULL   | NULL          | NULL |
+| 03         | Parikshit   |     NULL | NULL        | NULL     | Maharashtra   | NULL   | NULL          | NULL |
+| 04         | Lalasa      |     NULL | NULL        | NULL     | Tamil Nadu    | NULL   | NULL          | NULL |
+| 05         | Siddhant    |     NULL | NULL        | NULL     | West Bengal   | NULL   | NULL          | NULL |
+| 06         | Shashi      |     NULL | NULL        | NULL     | West Bengal   | NULL   | NULL          | NULL |
+| 07         | Raj         |     NULL | NULL        | NULL     | Rajasthan     | NULL   | NULL          | NULL |
+| 08         | Siddharth   |     NULL | NULL        | NULL     | Rajasthan     | NULL   | NULL          | NULL |
+| 09         | Krushna     |     NULL | NULL        | NULL     | Rajasthan     | NULL   | NULL          | NULL |
+| 10         | Himanshu    |     NULL | NULL        | NULL     | Rajasthan     | NULL   | NULL          | NULL |
+| 11         | Ankur       |     NULL | NULL        | NULL     | Gujarat       | NULL   | NULL          | NULL |
+| 12         | Abhinav     |     NULL | NULL        | NULL     | Maharashtra   | NULL   | NULL          | NULL |
+| 13         | Prathamesh  |     NULL | NULL        | NULL     | Maharashtra   | NULL   | NULL          | NULL |
+| 14         | Yashasvi    |     NULL | NULL        | NULL     | Rajasthan     | NULL   | NULL          | NULL |
+| 15         | Yashvardhan |     NULL | NULL        | NULL     | Rajasthan     | NULL   | NULL          | NULL |
+| 16         | Hemanth     |     NULL | NULL        | NULL     | Uttar Pradesh | NULL   | NULL          | NULL |
+| 17         | Vaibhav     |     NULL | NULL        | NULL     | Uttar Pradesh | NULL   | NULL          | NULL |
+| 18         | Chandan     |     NULL | NULL        | NULL     | Uttar Pradesh | NULL   | NULL          | NULL |
+| 19         | Vineeth     |     NULL | NULL        | NULL     | Assam         | NULL   | NULL          | NULL |
++------------+-------------+----------+-------------+----------+---------------+--------+---------------+------+
+19 rows in set (0.00 sec)
+
+Doctor :
+
++-----------+-----------+---------------+-----------------+----------------+
+| doctor_id | name      | date_of_birth | department_code | highest_degree |
++-----------+-----------+---------------+-----------------+----------------+
+| 01        | Prajwal   | NULL          | 001             | NULL           |
+| 02        | Siddharth | NULL          | 001             | NULL           |
+| 03        | Nisarg    | NULL          | 001             | NULL           |
+| 04        | Bhanu     | NULL          | 001             | NULL           |
+| 05        | Atharva   | NULL          | 002             | NULL           |
+| 06        | Vivek     | NULL          | 002             | NULL           |
+| 07        | Aayush    | NULL          | 002             | NULL           |
+| 08        | Subham    | NULL          | 002             | NULL           |
+| 09        | Anubhav   | NULL          | 003             | NULL           |
+| 10        | Nishok    | NULL          | 003             | NULL           |
+| 11        | Aman      | NULL          | 003             | NULL           |
+| 12        | Yaswanth  | NULL          | 003             | NULL           |
+| 13        | Sharmilla | NULL          | 004             | NULL           |
+| 14        | Theerda   | NULL          | 004             | NULL           |
+| 15        | Sudhanyu  | NULL          | 005             | NULL           |
+| 16        | Vishesh   | NULL          | 005             | NULL           |
++-----------+-----------+---------------+-----------------+----------------+
+16 rows in set (0.00 sec)
+
+Admissions :
+
++------------+-----------------+-------------------+-------------------+-----------------+-----------------+
+| patient_id | department_code | date_of_admission | time_of_admission | date_of_release | time_of_release |
++------------+-----------------+-------------------+-------------------+-----------------+-----------------+
+| 01         | 001             | 2017-01-01        | 12:00:00          | 2017-02-01      | NULL            |
+| 01         | 001             | 2017-01-01        | 18:00:00          | 2017-02-01      | NULL            |
+| 01         | 002             | 2017-01-01        | 12:00:00          | NULL            | NULL            |
+| 01         | 003             | 2017-01-01        | 12:00:00          | 2017-02-01      | NULL            |
+| 01         | 005             | 2017-01-01        | 12:00:00          | 2017-02-01      | NULL            |
+| 02         | 001             | 2017-01-01        | 12:00:00          | 2017-02-01      | NULL            |
+| 02         | 001             | 2017-01-01        | 18:00:00          | 2017-02-01      | NULL            |
+| 02         | 003             | 2017-01-01        | 12:00:00          | 2017-02-01      | NULL            |
+| 02         | 003             | 2017-02-01        | 12:00:00          | NULL            | NULL            |
+| 02         | 003             | 2017-03-01        | 12:00:00          | NULL            | NULL            |
+| 02         | 004             | 2017-01-01        | 12:00:00          | 2017-02-01      | NULL            |
+| 03         | 001             | 2017-01-01        | 12:00:00          | NULL            | NULL            |
+| 03         | 004             | 2017-01-01        | 12:00:00          | 2017-02-01      | NULL            |
+| 03         | 004             | 2017-02-01        | 12:00:00          | 2017-03-01      | NULL            |
+| 03         | 004             | 2017-03-01        | 12:00:00          | NULL            | NULL            |
+| 04         | 001             | 2017-01-01        | 12:00:00          | NULL            | NULL            |
+| 04         | 004             | 2017-01-01        | 12:00:00          | 2017-02-01      | NULL            |
+| 05         | 001             | 2017-01-01        | 12:00:00          | NULL            | NULL            |
+| 06         | 002             | 2017-01-01        | 12:00:00          | 2017-02-01      | NULL            |
+| 06         | 005             | 2017-01-01        | 12:00:00          | 2017-02-01      | NULL            |
+| 07         | 002             | 2017-01-01        | 12:00:00          | 2017-02-01      | NULL            |
+| 07         | 005             | 2017-01-01        | 12:00:00          | 2017-02-01      | NULL            |
+| 08         | 002             | 2017-01-01        | 12:00:00          | NULL            | NULL            |
+| 08         | 005             | 2017-01-01        | 12:00:00          | 2017-02-01      | NULL            |
+| 09         | 002             | 2017-01-01        | 12:00:00          | NULL            | NULL            |
+| 09         | 005             | 2017-01-01        | 12:00:00          | 2017-02-01      | NULL            |
+| 10         | 002             | 2017-01-01        | 12:00:00          | NULL            | NULL            |
+| 10         | 002             | 2017-01-01        | 18:00:00          | NULL            | NULL            |
+| 10         | 003             | 2017-01-01        | 12:00:00          | NULL            | NULL            |
+| 11         | 003             | 2017-01-01        | 12:00:00          | 2017-02-01      | NULL            |
+| 11         | 005             | 2017-01-01        | 12:00:00          | 2017-02-01      | NULL            |
+| 14         | 003             | 2017-01-01        | 12:00:00          | NULL            | NULL            |
++------------+-----------------+-------------------+-------------------+-----------------+-----------------+
+32 rows in set (0.00 sec)
+
+Appointments :
+
++------------+-----------+
+| patient_id | doctor_id |
++------------+-----------+
+| 01         | 01        |
+| 01         | 02        |
+| 01         | 04        |
+| 01         | 07        |
+| 01         | 15        |
+| 02         | 03        |
+| 02         | 05        |
+| 02         | 15        |
+| 03         | 05        |
+| 03         | 06        |
+| 03         | 08        |
+| 04         | 08        |
+| 05         | 09        |
+| 06         | 10        |
+| 07         | 11        |
+| 08         | 12        |
+| 09         | 13        |
+| 10         | 16        |
+| 11         | 14        |
+| 12         | 13        |
+| 13         | 14        |
+| 14         | 16        |
++------------+-----------+
+22 rows in set (0.00 sec)
+
+
+Results of the query for each question :
+
+
+1. List the patients (Patient_Id, Name) so far admitted under each doctor (Doctor_Id, Name).
+
+SELECT DISTINCT p.patient_id "Patient ID", p.name "Patient Name", d.doctor_id "Doctor ID", d.name "Doctor name"
+FROM patient p, doctor d, appointments ap, admissions ad
+WHERE p.patient_id = ap.patient_id
+AND p.patient_id = ad.patient_id
+AND d.doctor_id = ap.doctor_id
+ORDER BY d.doctor_id;
+
++------------+--------------+-----------+-------------+
+| Patient ID | Patient Name | Doctor ID | Doctor name |
++------------+--------------+-----------+-------------+
+| 01         | Ayush        | 01        | Prajwal     |
+| 01         | Ayush        | 02        | Siddharth   |
+| 02         | Harsha       | 03        | Nisarg      |
+| 01         | Ayush        | 04        | Bhanu       |
+| 03         | Parikshit    | 05        | Atharva     |
+| 02         | Harsha       | 05        | Atharva     |
+| 03         | Parikshit    | 06        | Vivek       |
+| 01         | Ayush        | 07        | Aayush      |
+| 03         | Parikshit    | 08        | Subham      |
+| 04         | Lalasa       | 08        | Subham      |
+| 05         | Siddhant     | 09        | Anubhav     |
+| 06         | Shashi       | 10        | Nishok      |
+| 07         | Raj          | 11        | Aman        |
+| 08         | Siddharth    | 12        | Yaswanth    |
+| 09         | Krushna      | 13        | Sharmilla   |
+| 11         | Ankur        | 14        | Theerda     |
+| 02         | Harsha       | 15        | Sudhanyu    |
+| 01         | Ayush        | 15        | Sudhanyu    |
+| 14         | Yashasvi     | 16        | Vishesh     |
+| 10         | Himanshu     | 16        | Vishesh     |
++------------+--------------+-----------+-------------+
+20 rows in set (0.01 sec)
+
+2. List the patients (Patient_Id, Name) currently admitted under each doctor (Doctor_Id, Name), i.e., the patients who have been admitted but not yet been released.
+
+SELECT DISTINCT p.patient_id "Patient ID", p.name "Patient Name", d.doctor_id "Doctor ID", d.name "Doctor name"
+FROM patient p, doctor d, appointments ap, admissions ad
+WHERE p.patient_id = ap.patient_id
+AND p.patient_id = ad.patient_id
+AND d.doctor_id = ap.doctor_id
+AND ad.date_of_release IS NULL
+ORDER BY d.doctor_id;
+
++------------+--------------+-----------+-------------+
+| Patient ID | Patient Name | Doctor ID | Doctor name |
++------------+--------------+-----------+-------------+
+| 01         | Ayush        | 01        | Prajwal     |
+| 01         | Ayush        | 02        | Siddharth   |
+| 02         | Harsha       | 03        | Nisarg      |
+| 01         | Ayush        | 04        | Bhanu       |
+| 03         | Parikshit    | 05        | Atharva     |
+| 02         | Harsha       | 05        | Atharva     |
+| 03         | Parikshit    | 06        | Vivek       |
+| 01         | Ayush        | 07        | Aayush      |
+| 03         | Parikshit    | 08        | Subham      |
+| 04         | Lalasa       | 08        | Subham      |
+| 05         | Siddhant     | 09        | Anubhav     |
+| 08         | Siddharth    | 12        | Yaswanth    |
+| 09         | Krushna      | 13        | Sharmilla   |
+| 02         | Harsha       | 15        | Sudhanyu    |
+| 01         | Ayush        | 15        | Sudhanyu    |
+| 14         | Yashasvi     | 16        | Vishesh     |
+| 10         | Himanshu     | 16        | Vishesh     |
++------------+--------------+-----------+-------------+
+17 rows in set (0.00 sec)
+
+3. List the patients (Patient_Id, Name) so far admitted under each doctor (Doctor_Id, Name) who have been admitted under more than one department.
+
+SELECT DISTINCT p.patient_id "Patient ID", p.name "Patient Name", d.doctor_id "Doctor ID", d.name "Doctor name"
+FROM patient p, doctor d, appointments ap, admissions ad
+WHERE p.patient_id = ap.patient_id
+AND p.patient_id = ad.patient_id
+AND d.doctor_id = ap.doctor_id
+AND 
+(
+SELECT COUNT(DISTINCT ADM.patient_id,ADM.department_code)
+FROM admissions ADM
+WHERE p.patient_id = ADM.patient_id
+) > 1
+ORDER BY d.doctor_id;
+
++------------+--------------+-----------+-------------+
+| Patient ID | Patient Name | Doctor ID | Doctor name |
++------------+--------------+-----------+-------------+
+| 01         | Ayush        | 01        | Prajwal     |
+| 01         | Ayush        | 02        | Siddharth   |
+| 02         | Harsha       | 03        | Nisarg      |
+| 01         | Ayush        | 04        | Bhanu       |
+| 03         | Parikshit    | 05        | Atharva     |
+| 02         | Harsha       | 05        | Atharva     |
+| 03         | Parikshit    | 06        | Vivek       |
+| 01         | Ayush        | 07        | Aayush      |
+| 04         | Lalasa       | 08        | Subham      |
+| 03         | Parikshit    | 08        | Subham      |
+| 06         | Shashi       | 10        | Nishok      |
+| 07         | Raj          | 11        | Aman        |
+| 08         | Siddharth    | 12        | Yaswanth    |
+| 09         | Krushna      | 13        | Sharmilla   |
+| 11         | Ankur        | 14        | Theerda     |
+| 01         | Ayush        | 15        | Sudhanyu    |
+| 02         | Harsha       | 15        | Sudhanyu    |
+| 10         | Himanshu     | 16        | Vishesh     |
++------------+--------------+-----------+-------------+
+18 rows in set (0.01 sec)
+
+4. List the patients (Patient_Id, Name) so far admitted under each doctor (Doctor_Id, Name) who have not been admitted in the same department to which the doctor belongs.
+
+SELECT DISTINCT p.patient_id "Patient ID", p.name "Patient Name", d.doctor_id "Doctor ID", d.name "Doctor name"
+FROM patient p, doctor d, appointments ap, admissions ad
+WHERE p.patient_id = ap.patient_id
+AND p.patient_id = ad.patient_id
+AND d.doctor_id = ap.doctor_id
+AND
+d.department_code NOT IN 
+(
+SELECT DISTINCT ADM.department_code
+FROM admissions ADM
+WHERE p.patient_id = ADM.patient_id
+)
+ORDER BY d.doctor_id;
+
++------------+--------------+-----------+-------------+
+| Patient ID | Patient Name | Doctor ID | Doctor name |
++------------+--------------+-----------+-------------+
+| 03         | Parikshit    | 05        | Atharva     |
+| 02         | Harsha       | 05        | Atharva     |
+| 03         | Parikshit    | 06        | Vivek       |
+| 04         | Lalasa       | 08        | Subham      |
+| 03         | Parikshit    | 08        | Subham      |
+| 05         | Siddhant     | 09        | Anubhav     |
+| 06         | Shashi       | 10        | Nishok      |
+| 07         | Raj          | 11        | Aman        |
+| 08         | Siddharth    | 12        | Yaswanth    |
+| 09         | Krushna      | 13        | Sharmilla   |
+| 11         | Ankur        | 14        | Theerda     |
+| 02         | Harsha       | 15        | Sudhanyu    |
+| 14         | Yashasvi     | 16        | Vishesh     |
+| 10         | Himanshu     | 16        | Vishesh     |
++------------+--------------+-----------+-------------+
+14 rows in set (0.00 sec)
+
+5. List the patients (Patient_Id, Name) so far admitted under each doctor (Doctor_Id, Name) who have been admitted in at least one department to which the doctor does not belong.
+
+SELECT DISTINCT p.patient_id "Patient ID", p.name "Patient Name", d.doctor_id "Doctor ID", d.name "Doctor name"
+FROM patient p, doctor d, appointments ap, admissions ad
+WHERE p.patient_id = ap.patient_id
+AND p.patient_id = ad.patient_id
+AND d.doctor_id = ap.doctor_id
+AND
+d.department_code <> SOME
+(
+SELECT DISTINCT ADM.department_code
+FROM admissions ADM
+WHERE p.patient_id = ADM.patient_id
+)
+ORDER BY d.doctor_id;
+
++------------+--------------+-----------+-------------+
+| Patient ID | Patient Name | Doctor ID | Doctor name |
++------------+--------------+-----------+-------------+
+| 01         | Ayush        | 01        | Prajwal     |
+| 01         | Ayush        | 02        | Siddharth   |
+| 02         | Harsha       | 03        | Nisarg      |
+| 01         | Ayush        | 04        | Bhanu       |
+| 03         | Parikshit    | 05        | Atharva     |
+| 02         | Harsha       | 05        | Atharva     |
+| 03         | Parikshit    | 06        | Vivek       |
+| 01         | Ayush        | 07        | Aayush      |
+| 03         | Parikshit    | 08        | Subham      |
+| 04         | Lalasa       | 08        | Subham      |
+| 05         | Siddhant     | 09        | Anubhav     |
+| 06         | Shashi       | 10        | Nishok      |
+| 07         | Raj          | 11        | Aman        |
+| 08         | Siddharth    | 12        | Yaswanth    |
+| 09         | Krushna      | 13        | Sharmilla   |
+| 11         | Ankur        | 14        | Theerda     |
+| 02         | Harsha       | 15        | Sudhanyu    |
+| 01         | Ayush        | 15        | Sudhanyu    |
+| 14         | Yashasvi     | 16        | Vishesh     |
+| 10         | Himanshu     | 16        | Vishesh     |
++------------+--------------+-----------+-------------+
+20 rows in set (0.01 sec)
+
+6. List the visit details of patients (Patient_Id, Name, Date of Admission, Date of Release). Date of Release will be NULL if the patient is currently admitted. Note that, if the same person visits the hospital more than once, we need to display details of each visit (hint: if the same patient visits the hospital again, he/she will be given the same patient id). Bonus of 10 Marks if you can handle the situation in which a patient is admitted on a day, released on the same day and is again admitted on the same day (total for today’s assignment cannot exceed full marks with the bonus).
+
+SELECT p.patient_id "Patient ID", p.name "Patient Name", ad.date_of_admission "Date of Admission", ad.date_of_release "Date of Release"
+FROM patient p, admissions ad
+WHERE p.patient_id = ad.patient_id;
+
++------------+--------------+-------------------+-----------------+
+| Patient ID | Patient Name | Date of Admission | Date of Release |
++------------+--------------+-------------------+-----------------+
+| 01         | Ayush        | 2017-01-01        | 2017-02-01      |
+| 01         | Ayush        | 2017-01-01        | 2017-02-01      |
+| 01         | Ayush        | 2017-01-01        | NULL            |
+| 01         | Ayush        | 2017-01-01        | 2017-02-01      |
+| 01         | Ayush        | 2017-01-01        | 2017-02-01      |
+| 02         | Harsha       | 2017-01-01        | 2017-02-01      |
+| 02         | Harsha       | 2017-01-01        | 2017-02-01      |
+| 02         | Harsha       | 2017-01-01        | 2017-02-01      |
+| 02         | Harsha       | 2017-02-01        | NULL            |
+| 02         | Harsha       | 2017-03-01        | NULL            |
+| 02         | Harsha       | 2017-01-01        | 2017-02-01      |
+| 03         | Parikshit    | 2017-01-01        | NULL            |
+| 03         | Parikshit    | 2017-01-01        | 2017-02-01      |
+| 03         | Parikshit    | 2017-02-01        | 2017-03-01      |
+| 03         | Parikshit    | 2017-03-01        | NULL            |
+| 04         | Lalasa       | 2017-01-01        | NULL            |
+| 04         | Lalasa       | 2017-01-01        | 2017-02-01      |
+| 05         | Siddhant     | 2017-01-01        | NULL            |
+| 06         | Shashi       | 2017-01-01        | 2017-02-01      |
+| 06         | Shashi       | 2017-01-01        | 2017-02-01      |
+| 07         | Raj          | 2017-01-01        | 2017-02-01      |
+| 07         | Raj          | 2017-01-01        | 2017-02-01      |
+| 08         | Siddharth    | 2017-01-01        | NULL            |
+| 08         | Siddharth    | 2017-01-01        | 2017-02-01      |
+| 09         | Krushna      | 2017-01-01        | NULL            |
+| 09         | Krushna      | 2017-01-01        | 2017-02-01      |
+| 10         | Himanshu     | 2017-01-01        | NULL            |
+| 10         | Himanshu     | 2017-01-01        | NULL            |
+| 10         | Himanshu     | 2017-01-01        | NULL            |
+| 11         | Ankur        | 2017-01-01        | 2017-02-01      |
+| 11         | Ankur        | 2017-01-01        | 2017-02-01      |
+| 14         | Yashasvi     | 2017-01-01        | NULL            |
++------------+--------------+-------------------+-----------------+
+32 rows in set (0.00 sec)
+
+7. List for each doctor (Doctor_Id, Name), the number of patients currently admitted under him.
+
+SELECT d.doctor_id "Doctor ID", d.name "Doctor name", COUNT(DISTINCT ap.patient_id) "Number of patients currently admitted"
+FROM doctor d, appointments ap, admissions ad
+WHERE ap.patient_id = ad.patient_id
+AND d.doctor_id = ap.doctor_id
+AND ad.date_of_release IS NULL
+GROUP BY d.doctor_id;
+
++-----------+-------------+---------------------------------------+
+| Doctor ID | Doctor name | Number of patients currently admitted |
++-----------+-------------+---------------------------------------+
+| 01        | Prajwal     |                                     1 |
+| 02        | Siddharth   |                                     1 |
+| 03        | Nisarg      |                                     1 |
+| 04        | Bhanu       |                                     1 |
+| 05        | Atharva     |                                     2 |
+| 06        | Vivek       |                                     1 |
+| 07        | Aayush      |                                     1 |
+| 08        | Subham      |                                     2 |
+| 09        | Anubhav     |                                     1 |
+| 12        | Yaswanth    |                                     1 |
+| 13        | Sharmilla   |                                     1 |
+| 15        | Sudhanyu    |                                     2 |
+| 16        | Vishesh     |                                     2 |
++-----------+-------------+---------------------------------------+
+13 rows in set (0.00 sec)
+
+8. For each state, for each department having more than 5 wards, list the number of patients currently admitted (Only for those departments which have more than 2 patients currently admitted).
+
+SELECT p.state "State", dpt.department_name "Department name", COUNT(DISTINCT p.patient_id) "Number of patients currently admitted"
+FROM patient p, admissions ad, department dpt
+WHERE p.patient_id = ad.patient_id
+AND ad.department_code = dpt.department_code
+AND ad.date_of_release IS NULL
+AND dpt.number_of_wards > 5
+AND dpt.department_code IN
+(
+SELECT ADM.department_code
+FROM admissions ADM
+WHERE ADM.date_of_release IS NULL
+GROUP BY ADM.department_code
+HAVING COUNT(DISTINCT ADM.patient_id) >2
+)
+GROUP BY p.state,dpt.department_code;
+
++-------------+-----------------+---------------------------------------+
+| State       | Department name | Number of patients currently admitted |
++-------------+-----------------+---------------------------------------+
+| Maharashtra | Cardiology      |                                     1 |
+| Rajasthan   | Cardiology      |                                     3 |
+| Rajasthan   | Neurology       |                                     3 |
++-------------+-----------------+---------------------------------------+
+3 rows in set (0.01 sec)
